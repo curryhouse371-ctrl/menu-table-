@@ -560,6 +560,58 @@ function updateTotal() {
 
 // ➕ Premier affichage du menu
 render(DATA);
+    function attachHandlers(wrap) {
+  wrap.querySelectorAll(".checkbox").forEach(cb => {
+    cb.addEventListener("change", e => {
+      const id = e.target.id;
+      const name = e.target.dataset.name;
+      const price = parseFloat(e.target.dataset.price);
+      const qtyBox = wrap.querySelector(`[data-qty-box="${id}"]`);
+      const qtyEl = document.getElementById(`qty_${id}`);
+
+      if (e.target.checked) {
+        selected.set(id, { name, price, qty: 1 });
+        qtyBox.style.display = "flex";
+      } else {
+        selected.delete(id);
+        qtyBox.style.display = "none";
+      }
+
+      updateTotal();
+    });
+  });
+
+  wrap.querySelectorAll(".qty-btn").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const id = e.target.dataset.id;
+      const action = e.target.dataset.action;
+      const qtyEl = document.getElementById(`qty_${id}`);
+      const item = selected.get(id);
+      if (!item) return;
+
+      if (action === "plus") item.qty++;
+      if (action === "minus" && item.qty > 1) item.qty--;
+      qtyEl.textContent = item.qty;
+
+      selected.set(id, item);
+      updateTotal();
+    });
+  });
+}
+
+function calcTotal() {
+  let total = 0;
+  for (const item of selected.values()) {
+    total += item.price * item.qty;
+  }
+  return total;
+}
+
+function updateTotal() {
+  const total = calcTotal();
+  document.getElementById("orderTotal").textContent = `Total : ${total.toFixed(2).replace(".", ",")} €`;
+}
+
 
 // BARRE BAS FIXE (avec nom + numéro de table obligatoires)
 const bar = document.createElement('div');
