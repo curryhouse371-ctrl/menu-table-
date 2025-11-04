@@ -629,44 +629,70 @@ bar.innerHTML = `
       </div>
     </div>
   </div>`;
-document.body.appendChild(bar);
+// Fonction pour insérer la barre sticky en bas
+function insertStickyBar() {
+  const bar = document.createElement('div');
+  bar.className = 'sticky-bar';
+  bar.innerHTML = `
+    <div class="max-w-6xl mx-auto px-4 py-3 grid gap-3 md:flex md:items-end md:justify-between">
+      <div class="flex flex-col md:flex-row gap-2 md:items-center flex-wrap w-full">
+        <label for="clientName" class="text-sm text-gray-700 whitespace-nowrap">Nom du client :</label>
+        <input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
 
-// BLOC D’ENVOI WHATSAPP AVEC VALIDATION NOM + TABLE
-document.getElementById("sendWhatsApp").addEventListener("click", e => {
-  e.preventDefault();
+        <label for="tableNumber" class="text-sm text-gray-700 whitespace-nowrap">N° de table :</label>
+        <input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
 
-  const name = (document.getElementById("clientName").value || "").trim();
-  const table = (document.getElementById("tableNumber").value || "").trim();
+        <div class="flex items-center gap-3 mt-2 md:mt-0">
+          <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
+          <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande sur WhatsApp</a>
+        </div>
+      </div>
+    </div>`;
 
-  if (selected.size === 0) {
-    alert("Merci de cocher au moins un plat avant d’envoyer la commande.");
-    return;
-  }
+  // Ajoute la barre sticky à la fin du body
+  document.body.appendChild(bar);
 
-  if (!name) {
-    alert("Merci d’indiquer votre nom avant d’envoyer la commande.");
-    document.getElementById("clientName").focus();
-    return;
-  }
+  // Gérer l'événement de l'envoi via WhatsApp
+  document.getElementById("sendWhatsApp").addEventListener("click", e => {
+    e.preventDefault();
 
-  if (!table) {
-    alert("Merci d’indiquer le numéro de table avant d’envoyer la commande.");
-    document.getElementById("tableNumber").focus();
-    return;
-  }
+    const name = (document.getElementById("clientName").value || "").trim();
+    const table = (document.getElementById("tableNumber").value || "").trim();
 
-  let msg = `Bonjour Curry House,%0A`;
-  msg += `Commande de ${name} (table n°${table})%0A%0A`;
-  msg += `Plats :%0A`;
+    // Validation des champs
+    if (selected.size === 0) {
+      alert("Merci de cocher au moins un plat avant d’envoyer la commande.");
+      return;
+    }
 
-  for (const item of selected.values()) {
-    msg += `- ${item.name} x${item.qty} (${(item.price * item.qty).toFixed(2).replace(".", ",")} €)%0A`;
-  }
+    if (!name) {
+      alert("Merci d’indiquer votre nom avant d’envoyer la commande.");
+      document.getElementById("clientName").focus();
+      return;
+    }
 
-  msg += `%0A🔸 Total : ${(calcTotal()).toFixed(2).replace(".", ",")} €`;
+    if (!table) {
+      alert("Merci d’indiquer le numéro de table avant d’envoyer la commande.");
+      document.getElementById("tableNumber").focus();
+      return;
+    }
 
-  window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
-});
+    let msg = `Bonjour Curry House,%0A`;
+    msg += `Commande de ${name} (table n°${table})%0A%0A`;
+    msg += `Plats :%0A`;
+
+    for (const item of selected.values()) {
+      msg += `- ${item.name} x${item.qty} (${(item.price * item.qty).toFixed(2).replace(".", ",")} €)%0A`;
+    }
+
+    msg += `%0A🔸 Total : ${(calcTotal()).toFixed(2).replace(".", ",")} €`;
+
+    window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
+  });
+}
+
+// Appel de la fonction pour insérer la barre sticky
+insertStickyBar();
   
 </script>
 </body>
