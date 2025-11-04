@@ -498,15 +498,14 @@ function itemRow(item){
     </div>`;
 }
 // Fonction principale d’affichage
-function render(data){
-  globalIndex = 1; // on recommence à 1 à chaque rendu
-  const q = (searchEl.value||"").trim().toLowerCase();
-  const sub = subcatEl.value;
+// Fonction principale d’affichage
+function render(data) {
+  const q = searchEl.value.trim().toLowerCase();
   menuEl.innerHTML = "";
 
- data.forEach(cat => {
+  data.forEach(cat => {
     let html = "";
-    html += sectionHeader(cat.category, cat.note);
+    html += sectionHeader(cat.category);
     html += catImage(cat.category);
 
     if (cat.subcategories){
