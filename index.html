@@ -436,7 +436,7 @@
     ];
   </script>
 
-  <!-- RENDERER + SÉLECTION / QUANTITÉS / TOTAL / WHATSAPP -->
+ <!-- RENDERER + SÉLECTION / QUANTITÉS / TOTAL / WHATSAPP -->
   <script>
     const menuEl = document.getElementById("menu");
     const selected = new Map();
@@ -448,8 +448,7 @@
       const opt = document.createElement("option");
       opt.value = name; opt.textContent = name; subcatEl.appendChild(opt);
     });
-
-    const euro = n => `${n.toFixed(2).replace(".", ",")} €`;
+     const euro = n => `${n.toFixed(2).replace(".", ",")} €`;
 
     function sectionHeader(title, note){
       return `
@@ -492,7 +491,6 @@ function itemRow(item){
       </div>
     </div>`;
 }
-
 // Fonction principale d’affichage
 function render(data){
   globalIndex = 1; // on recommence à 1 à chaque rendu
@@ -500,7 +498,7 @@ function render(data){
   const sub = subcatEl.value;
   menuEl.innerHTML = "";
 
-  data.forEach(cat => {
+ data.forEach(cat => {
     let html = "";
     html += sectionHeader(cat.category, cat.note);
     html += catImage(cat.category);
