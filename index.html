@@ -624,11 +624,14 @@ document.getElementById("sendWhatsApp").addEventListener("click", e => {
   }
 
   const name = (document.getElementById("clientName").value || "").trim();
-  const type = document.getElementById("orderType").value;
+const type = document.getElementById("orderType").value;
+const table = (document.getElementById("tableNumber").value || "").trim();
 
   let msg = `Bonjour Curry House,%0A`;
   msg += name ? `Commande de ${name}%0A` : "Commande:%0A";
   msg += `Type de commande : ${type}%0A`;
+  if (table) msg += `Numéro de table : ${table}%0A`;
+
 
   msg += `%0APlats :%0A`;
   for (const item of selected.values()) {
