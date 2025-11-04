@@ -474,30 +474,32 @@
    // Compteur global pour numéroter tous les plats
 let globalIndex = 1;
 
-// Fonction pour créer un plat (avec numéro)
-function itemRow(item){
-  const id = `id_${Math.random().toString(36).slice(2,9)}`;
-  const index = globalIndex++; // numéro du plat global
+function itemRow(item) {
   return `
     <div class="flex items-center justify-between py-2 border-b border-orange-50 gap-3">
       <div class="flex items-start gap-3">
-        <input id="${id}" type="checkbox" class="checkbox mt-1" data-name="${item.name.replaceAll('"','&quot;')}" data-price="${item.price}">
-        <label for="${id}" class="cursor-pointer">
-          <p class="font-medium">${index}. ${item.name}</p>
-          ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
-        </label>
+        <p class="font-medium">${item.name}</p>
+        ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
       </div>
       <div class="flex items-center gap-3">
-        <div class="flex items-center gap-1" data-qty-box="${id}" style="display:none;">
-          <div class="qty-btn" data-action="minus" data-id="${id}">-</div>
-          <span id="qty_${id}">1</span>
-          <div class="qty-btn" data-action="plus" data-id="${id}">+</div>
-        </div>
         <div class="price whitespace-nowrap">${euro(item.price)}</div>
       </div>
     </div>`;
 }
-// Fonction principale d’affichage
+    
+function itemRow(item) {
+  return `
+    <div class="flex items-center justify-between py-2 border-b border-orange-50 gap-3">
+      <div class="flex items-start gap-3">
+        <p class="font-medium">${item.name}</p>
+        ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="price whitespace-nowrap">${euro(item.price)}</div>
+      </div>
+    </div>`;
+}
+
 // Fonction principale d’affichage
 function render(data) {
   const q = searchEl.value.trim().toLowerCase();
@@ -508,30 +510,23 @@ function render(data) {
     html += sectionHeader(cat.category);
     html += catImage(cat.category);
 
-    if (cat.subcategories){
-      const subs = sub ? cat.subcategories.filter(sc => sc.name===sub) : cat.subcategories;
-      subs.forEach(sc => {
-        const items = sc.items.filter(it => !q || it.name.toLowerCase().includes(q));
-        if (!items.length) return;
-        html += `<h3 class="mt-3 mb-2 text-lg font-semibold text-gray-800">${sc.name}</h3>`;
-        html += `<div class="card p-2 md:p-4 divide-y divide-orange-50">` + items.map(itemRow).join("") + `</div>`;
-      });
-    } else {
-      const items = cat.items.filter(it => !q || it.name.toLowerCase().includes(q));
-      if (items.length){
-        html += `<div class="card p-2 md:p-4 divide-y divide-orange-50">` + items.map(itemRow).join("") + `</div>`;
-      }
+    const items = cat.items.filter(it => !q || it.name.toLowerCase().includes(q));
+    if (items.length) {
+      html += `<div class="card p-2 md:p-4 divide-y divide-orange-50">` + items.map(itemRow).join("") + `</div>`;
     }
 
     const wrap = document.createElement("section");
     wrap.className = "mb-12";
     wrap.innerHTML = html;
     menuEl.appendChild(wrap);
-    attachHandlers(wrap);
   });
-
-  updateTotal();
 }
+
+// Fonction de filtrage lors de la recherche
+searchEl.addEventListener("input", () => render(DATA));
+
+// Affichage initial du menu
+render(DATA);
 
 // ➕ Réactions aux filtres / recherche
 searchEl.addEventListener("input", () => render(DATA));
