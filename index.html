@@ -24,7 +24,7 @@
       background: #fff; border-top: 1px solid rgba(249,115,22,.25);
       box-shadow: 0 -6px 16px rgba(0,0,0,.08);
     }
-    .cat-image img{ width:100%; height: 15rem; }
+    .cat-image img{ width:100%; height: 15rem; object-fit: cover; }
     @media (min-width: 768px){ .cat-image img{ height: 18rem; } }
     .checkbox{ width: 1.15rem; height: 1.15rem; accent-color: var(--ch-primary); }
     .qty-btn { background: #f97316; color: white; border-radius: 6px; width: 1.8rem; height: 1.8rem; text-align: center; line-height: 1.8rem; font-weight: bold; cursor: pointer; }
@@ -32,38 +32,17 @@
 </head>
 
 <body class="text-[15px] text-gray-800 pb-28">
-  <!-- Header -->
   <header class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <div>
-        <h1 class="text-3xl md:text-4xl font-semibold title-gradient tracking-tight">Curry House — Montreuil</h1>
-        <p class="text-gray-600">Menu maison · Livraison gratuite sur Montreuil</p>
-      </div>
-      <div class="text-right">
-        <a href="tel:0983036692" class="block text-orange-600 font-semibold">📞 09 83 03 66 92</a>
-        <a href="https://wa.me/33763424110" target="_blank" class="block text-green-600 font-semibold">💬 WhatsApp : 07 63 42 41 10</a>
-      </div>
-    </div>
-
-    <!-- Bandeau livraison -->
-    <div class="mt-4 p-3 rounded-xl border border-orange-200 bg-orange-50 text-orange-800 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-      <p class="font-medium">🚚 Livraison <strong>gratuite sur Montreuil</strong></p>
-      <p>Commandes :
-        <a href="tel:0983036692" class="underline font-semibold">09 83 03 66 92</a> ·
-        <a href="https://wa.me/33763424110" target="_blank" class="underline font-semibold text-green-700">WhatsApp</a>
-      </p>
-    </div>
+    <h1 class="text-3xl md:text-4xl font-semibold title-gradient tracking-tight">Curry House — Montreuil</h1>
+    <p class="text-gray-600">Menu maison · Commande depuis votre table</p>
   </header>
 
-  <!-- Filtres (optionnel pour recherche) -->
-  <div class="mt-6 flex flex-col md:flex-row gap-3">
-    <input id="search" type="search" placeholder="Rechercher un plat (ex. tikka, agneau, naan)" class="w-full md:flex-1 px-4 py-3 rounded-xl border border-orange-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-orange-300" />
+  <div class="mt-4 flex flex-col md:flex-row gap-3 max-w-6xl mx-auto px-4">
+    <input id="search" type="search" placeholder="Rechercher un plat..." class="w-full md:flex-1 px-4 py-3 rounded-xl border border-orange-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-orange-300" />
   </div>
 
-  <!-- Contenu -->
-  <main id="menu" class="max-w-6xl mx-auto px-4 pb-10"></main>
+  <main id="menu" class="max-w-6xl mx-auto px-4 pb-10 mt-4"></main>
 
-  <!-- Footer -->
   <footer class="border-t border-orange-100/60 bg-white/60 backdrop-blur-sm mt-10">
     <div class="max-w-6xl mx-auto px-4 py-8 text-sm text-gray-600">
       <p><strong>Adresse :</strong> 72 rue Beaumarchais, 93100 Montreuil</p>
@@ -439,226 +418,138 @@
       ]}
     ];
   </script>
-
- <!-- RENDERER + SÉLECTION / QUANTITÉS / TOTAL / WHATSAPP -->
-  <script>
-    const menuEl = document.getElementById("menu");
-    const searchEl = document.getElementById("search"); // Ajout de la référence au champ de recherche
+const menuEl = document.getElementById("menu");
+    const searchEl = document.getElementById("search");
     const selected = new Map();
-
-    // Remplir filtre sous-catégories (s'il y en a)
-    const allSubcats = new Set();
-    DATA.forEach(cat => { if (cat.subcategories) cat.subcategories.forEach(sc => allSubcats.add(sc.name)); });
-    [...allSubcats].sort().forEach(name => {
-      const opt = document.createElement("option");
-      opt.value = name; opt.textContent = name; subcatEl.appendChild(opt);
-    });
-    
-    
+    let globalIndex = 1;
     const euro = n => `${n.toFixed(2).replace(".", ",")} €`;
-    
-    function sectionHeader(title) {
-  return `
-    <div class="flex items-end justify-between mb-3">
-      <h2 class="text-2xl md:text-3xl font-semibold title-gradient">${title}</h2>
-    </div>`;
-}
 
-    function catImage(title){
-      const src = CATEGORY_IMAGES[title] || "";
-      return `<div class="cat-image overflow-hidden rounded-xl border border-orange-100 mb-4">
-                <img loading="lazy" src="${src}" alt="${title}" class="w-full object-cover" onerror="this.remove()">
-              </div>`;
-    }
-
-   // Compteur global pour numéroter tous les plats
-let globalIndex = 1;
-
-function itemRow(item) {
-  return `
-    <div class="flex items-center justify-between py-2 border-b border-orange-50 gap-3">
-      <div class="flex items-start gap-3">
-        <p class="font-medium">${item.name}</p>
-        ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="price whitespace-nowrap">${euro(item.price)}</div>
-      </div>
-    </div>`;
-}
-    
-function itemRow(item) {
-  return `
-    <div class="flex items-center justify-between py-2 border-b border-orange-50 gap-3">
-      <div class="flex items-start gap-3">
-        <p class="font-medium">${item.name}</p>
-        ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
-      </div>
-      <div class="flex items-center gap-3">
-        <div class="price whitespace-nowrap">${euro(item.price)}</div>
-      </div>
-    </div>`;
-}
-
-// Fonction principale d’affichage
-function render(data) {
-  const q = searchEl.value.trim().toLowerCase();
-  menuEl.innerHTML = "";
-
-  data.forEach(cat => {
-    let html = "";
-    html += sectionHeader(cat.category);
-    html += catImage(cat.category);
-
-    const items = cat.items.filter(it => !q || it.name.toLowerCase().includes(q));
-    if (items.length) {
-      html += `<div class="card p-2 md:p-4 divide-y divide-orange-50">` + items.map(itemRow).join("") + `</div>`;
-    }
-
-    const wrap = document.createElement("section");
-    wrap.className = "mb-12";
-    wrap.innerHTML = html;
-    menuEl.appendChild(wrap);
-  });
-}
-
-// Fonction de filtrage lors de la recherche
-searchEl.addEventListener("input", () => render(DATA));
-
-// Affichage initial du menu
-render(DATA);
-
-// ➕ Réactions aux filtres / recherche
-searchEl.addEventListener("input", () => render(DATA));
-subcatEl.addEventListener("change", () => render(DATA));
-
-// Gestion des interactions cases à cocher et quantités
-function attachHandlers(wrap) {
-  wrap.querySelectorAll(".checkbox").forEach(cb => {
-    cb.addEventListener("change", e => {
-      const id = e.target.id;
-      const name = e.target.dataset.name;
-      const price = parseFloat(e.target.dataset.price);
-      const qtyBox = wrap.querySelector(`[data-qty-box="${id}"]`);
-      const qtyEl = document.getElementById(`qty_${id}`);
-
-      if (e.target.checked) {
-        selected.set(id, { name, price, qty: 1 });
-        qtyBox.style.display = "flex";
-      } else {
-        selected.delete(id);
-        qtyBox.style.display = "none";
-      }
-      updateTotal();
-    });
-  });
-
-  wrap.querySelectorAll(".qty-btn").forEach(btn => {
-    btn.addEventListener("click", e => {
-      const id = e.target.dataset.id;
-      const action = e.target.dataset.action;
-      const qtyEl = document.getElementById(`qty_${id}`);
-      const item = selected.get(id);
-      if (!item) return;
-
-      if (action === "plus") item.qty++;
-      if (action === "minus" && item.qty > 1) item.qty--;
-      qtyEl.textContent = item.qty;
-      selected.set(id, item);
-      updateTotal();
-    });
-  });
-}
-
-// Calcul du total global
-function calcTotal() {
-  let total = 0;
-  for (const item of selected.values()) {
-    total += item.price * item.qty;
-  }
-  return total;
-}
-
-// Mettre à jour l'affichage du total en bas
-function updateTotal() {
-  const total = calcTotal();
-  document.getElementById("orderTotal").textContent =
-    `Total : ${total.toFixed(2).replace(".", ",")} €`;
-}
-
-// ➕ Premier affichage du menu
-render(DATA);
-
-// BARRE BAS FIXE (avec nom + numéro de table obligatoires)
-const bar = document.createElement('div');
-bar.className = 'sticky-bar';
-bar.innerHTML = `
-  <div class="max-w-6xl mx-auto px-4 py-3 grid gap-3 md:flex md:items-end md:justify-between">
-    <div class="flex flex-col md:flex-row gap-2 md:items-center flex-wrap w-full">
-      <label for="clientName" class="text-sm text-gray-700 whitespace-nowrap">Nom du client :</label>
-      <input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
-
-      <label for="tableNumber" class="text-sm text-gray-700 whitespace-nowrap">N° de table :</label>
-      <input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
-
-      <div class="flex items-center gap-3 mt-2 md:mt-0">
-        <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
-        <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande sur WhatsApp</a>
-      </div>
-    </div>
-  </div>`;
-    
- // Adding sticky bar
-    function insertStickyBar() {
-      const bar = document.createElement('div');
-      bar.className = 'sticky-bar';
-      bar.innerHTML = `
-        <div class="max-w-6xl mx-auto px-4 py-3 grid gap-3 md:flex md:items-end md:justify-between">
-          <div class="flex flex-col md:flex-row gap-2 md:items-center flex-wrap w-full">
-            <label for="clientName" class="text-sm text-gray-700 whitespace-nowrap">Nom du client :</label>
-            <input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
-            <label for="tableNumber" class="text-sm text-gray-700 whitespace-nowrap">N° de table :</label>
-            <input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
-            <div class="flex items-center gap-3 mt-2 md:mt-0">
-              <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
-              <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande sur WhatsApp</a>
+    function itemRow(item) {
+      const id = `id_${Math.random().toString(36).slice(2,9)}`;
+      const index = globalIndex++;
+      return `
+        <div class="flex items-center justify-between py-2 border-b border-orange-50 gap-3">
+          <div class="flex items-start gap-3">
+            <input id="${id}" type="checkbox" class="checkbox mt-1" data-name="${item.name}" data-price="${item.price}">
+            <label for="${id}" class="cursor-pointer">
+              <p class="font-medium">${index}. ${item.name}</p>
+              ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
+            </label>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1" data-qty-box="${id}" style="display:none;">
+              <div class="qty-btn" data-action="minus" data-id="${id}">-</div>
+              <span id="qty_${id}">1</span>
+              <div class="qty-btn" data-action="plus" data-id="${id}">+</div>
             </div>
+            <div class="price">${euro(item.price)}</div>
           </div>
         </div>`;
-      document.body.appendChild(bar);
     }
-    
-    // Calling the function to insert sticky bar
-    insertStickyBar();
-    
-    // Event listener for WhatsApp
-    document.getElementById("sendWhatsApp").addEventListener("click", e => {
-      e.preventDefault();
 
-      const name = document.getElementById("clientName").value.trim();
-      const table = document.getElementById("tableNumber").value.trim();
-      
-      if (selected.size === 0) {
-        alert("Merci de cocher au moins un plat avant d’envoyer la commande.");
-        return;
-      }
+    function render(data) {
+      menuEl.innerHTML = "";
+      globalIndex = 1;
+      const q = searchEl.value.trim().toLowerCase();
+      data.forEach(cat => {
+        const items = cat.items.filter(it => !q || it.name.toLowerCase().includes(q));
+        if (!items.length) return;
+        let html = `
+          <h2 class="text-2xl font-semibold title-gradient mt-6 mb-2">${cat.category}</h2>
+          ${CATEGORY_IMAGES[cat.category] ? `<div class="cat-image mb-3"><img src="${CATEGORY_IMAGES[cat.category]}" alt=""></div>` : ""}
+          <div class="card p-4 divide-y divide-orange-50">
+            ${items.map(itemRow).join("")}
+          </div>`;
+        const wrap = document.createElement("section");
+        wrap.innerHTML = html;
+        menuEl.appendChild(wrap);
+        attachHandlers(wrap);
+      });
+      updateTotal();
+    }
 
-      if (!name || !table) {
-        alert("Merci d’indiquer le nom et le numéro de table.");
-        return;
-      }
-
-      let msg = `Bonjour Curry House,%0A`;
-      msg += `Commande de ${name} (table n°${table})%0A%0A`;
-      msg += `Plats :%0A`;
-
-      selected.forEach(item => {
-        msg += `- ${item.name} x${item.qty} (${(item.price * item.qty).toFixed(2).replace(".", ",")} €)%0A`;
+    function attachHandlers(wrap) {
+      wrap.querySelectorAll(".checkbox").forEach(cb => {
+        cb.addEventListener("change", e => {
+          const id = e.target.id;
+          const name = e.target.dataset.name;
+          const price = parseFloat(e.target.dataset.price);
+          const qtyBox = wrap.querySelector(`[data-qty-box="${id}"]`);
+          const qtyEl = document.getElementById(`qty_${id}`);
+          if (e.target.checked) {
+            selected.set(id, { name, price, qty: 1 });
+            qtyBox.style.display = "flex";
+          } else {
+            selected.delete(id);
+            qtyBox.style.display = "none";
+          }
+          updateTotal();
+        });
       });
 
-      msg += `%0A🔸 Total : ${(calcTotal()).toFixed(2).replace(".", ",")} €`;
+      wrap.querySelectorAll(".qty-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const id = e.target.dataset.id;
+          const action = e.target.dataset.action;
+          const qtyEl = document.getElementById(`qty_${id}`);
+          const item = selected.get(id);
+          if (!item) return;
+          if (action === "plus") item.qty++;
+          if (action === "minus" && item.qty > 1) item.qty--;
+          qtyEl.textContent = item.qty;
+          selected.set(id, item);
+          updateTotal();
+        });
+      });
+    }
+
+    function calcTotal() {
+      let total = 0;
+      for (const item of selected.values()) total += item.price * item.qty;
+      return total;
+    }
+
+    function updateTotal() {
+      const total = calcTotal();
+      document.getElementById("orderTotal").textContent =
+        `Total : ${total.toFixed(2).replace(".", ",")} €`;
+    }
+
+    // Barre fixe (nom + table + bouton WhatsApp)
+    const bar = document.createElement("div");
+    bar.className = "sticky-bar";
+    bar.innerHTML = `
+      <div class="max-w-6xl mx-auto px-4 py-3 grid gap-3 md:flex md:items-end md:justify-between">
+        <div class="flex flex-col md:flex-row gap-2 md:items-center flex-wrap w-full">
+          <label class="text-sm text-gray-700">Nom du client :</label>
+          <input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:ring-2 focus:ring-orange-300" required />
+          <label class="text-sm text-gray-700">N° de table :</label>
+          <input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:ring-2 focus:ring-orange-300" required />
+          <div class="flex items-center gap-3 mt-2 md:mt-0">
+            <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
+            <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande</a>
+          </div>
+        </div>
+      </div>`;
+    document.body.appendChild(bar);
+
+    document.getElementById("sendWhatsApp").addEventListener("click", e => {
+      e.preventDefault();
+      const name = document.getElementById("clientName").value.trim();
+      const table = document.getElementById("tableNumber").value.trim();
+      if (selected.size === 0) return alert("Merci de cocher au moins un plat.");
+      if (!name || !table) return alert("Merci d’indiquer votre nom et le numéro de table.");
+      let msg = `Bonjour Curry House,%0ACommande de ${name} (table ${table})%0A%0A`;
+      selected.forEach(it => {
+        msg += `- ${it.name} x${it.qty} (${(it.price * it.qty).toFixed(2)} €)%0A`;
+      });
+      msg += `%0ATotal : ${(calcTotal()).toFixed(2)} €`;
       window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
     });
+
+    searchEl.addEventListener("input", () => render(DATA));
+    render(DATA);
   </script>
 </body>
 </html>
+
