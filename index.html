@@ -575,22 +575,19 @@ bar.className = 'sticky-bar';
 bar.innerHTML = `
   <div class="max-w-6xl mx-auto px-4 py-3 grid gap-3 md:flex md:items-end md:justify-between">
     <div class="flex flex-col md:flex-row gap-2 md:items-center flex-wrap w-full">
-      <label class="text-sm text-gray-700 whitespace-nowrap">Type de commande :</label>
-      <select id="orderType" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300">
-        <option value="Livraison">Livraison</option>
-        <option value="À emporter">À emporter</option>
-      </select>
-<label for="clientName" class="text-sm text-gray-700 whitespace-nowrap">Nom du client :</label>
-<input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" />
+      <label for="clientName" class="text-sm text-gray-700 whitespace-nowrap">Nom du client :</label>
+      <input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" />
 
-<label for="tableNumber" class="text-sm text-gray-700 whitespace-nowrap">N° de table :</label>
-<input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" />
+      <label for="tableNumber" class="text-sm text-gray-700 whitespace-nowrap">N° de table :</label>
+      <input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" />
 
-    <div class="flex items-center gap-3">
-      <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
-      <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande sur WhatsApp</a>
+      <div class="flex items-center gap-3 mt-2 md:mt-0">
+        <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
+        <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande sur WhatsApp</a>
+      </div>
     </div>
   </div>`;
+
 document.body.appendChild(bar);
 
 
@@ -624,16 +621,22 @@ document.getElementById("sendWhatsApp").addEventListener("click", e => {
   }
 
   const name = (document.getElementById("clientName").value || "").trim();
-const type = document.getElementById("orderType").value;
-const table = (document.getElementById("tableNumber").value || "").trim();
+  const table = (document.getElementById("tableNumber").value || "").trim();
+
+  if (!name) {
+    alert("Merci d’indiquer le nom du client.");
+    return;
+  }
+
+  if (!table) {
+    alert("Merci d’indiquer le numéro de table.");
+    return;
+  }
 
   let msg = `Bonjour Curry House,%0A`;
-  msg += name ? `Commande de ${name}%0A` : "Commande:%0A";
-  msg += `Type de commande : ${type}%0A`;
-  if (table) msg += `Numéro de table : ${table}%0A`;
+  msg += `Commande de ${name} (table n°${table})%0A%0A`;
+  msg += `Plats :%0A`;
 
-
-  msg += `%0APlats :%0A`;
   for (const item of selected.values()) {
     msg += `- ${item.name} x${item.qty} (${(item.price * item.qty).toFixed(2).replace(".", ",")} €)%0A`;
   }
@@ -642,6 +645,7 @@ const table = (document.getElementById("tableNumber").value || "").trim();
 
   window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
 });
+
     // Ne pas oublier d’appeler render une fois la page chargée
 </script>
 </body>
