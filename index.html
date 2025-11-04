@@ -547,6 +547,16 @@ function render(data){
 // ➕ Réactions aux filtres / recherche
 searchEl.addEventListener("input", () => render(DATA));
 subcatEl.addEventListener("change", () => render(DATA));
+function attachHandlers(wrap) {
+  // cette fonction est normalement responsable de gérer les + / - et les cases à cocher
+  // si tu veux juste tester l’affichage du menu sans interactivité :
+  return;
+}
+
+function updateTotal() {
+  // fonction vide temporaire pour éviter l’erreur
+  return;
+}
 
 // ➕ Premier affichage du menu
 render(DATA);
@@ -607,15 +617,7 @@ document.getElementById("sendWhatsApp").addEventListener("click", e => {
 
   window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
 });
-
-// Initialiser l’affichage du menu et les filtres
-searchEl.addEventListener("input", () => render(DATA));
-subcatEl.addEventListener("change", () => render(DATA));
-
-// Premier affichage du menu
-render(DATA);
-
-
+  
 </script>
 </body>
 </html>
