@@ -443,6 +443,7 @@
  <!-- RENDERER + SÉLECTION / QUANTITÉS / TOTAL / WHATSAPP -->
   <script>
     const menuEl = document.getElementById("menu");
+    const searchEl = document.getElementById("search"); // Ajout de la référence au champ de recherche
     const selected = new Map();
 
     // Remplir filtre sous-catégories (s'il y en a)
@@ -452,15 +453,16 @@
       const opt = document.createElement("option");
       opt.value = name; opt.textContent = name; subcatEl.appendChild(opt);
     });
-     const euro = n => `${n.toFixed(2).replace(".", ",")} €`;
-
-    function sectionHeader(title, note){
-      return `
-        <div class="flex items-end justify-between mb-3">
-          <h2 class="text-2xl md:text-3xl font-semibold title-gradient">${title}</h2>
-          ${note ? `<span class="text-xs md:text-sm tag px-3 py-1 rounded-full">${note}</span>` : ""}
-        </div>`;
-    }
+    
+    
+    const euro = n => `${n.toFixed(2).replace(".", ",")} €`;
+    
+    function sectionHeader(title) {
+  return `
+    <div class="flex items-end justify-between mb-3">
+      <h2 class="text-2xl md:text-3xl font-semibold title-gradient">${title}</h2>
+    </div>`;
+}
 
     function catImage(title){
       const src = CATEGORY_IMAGES[title] || "";
