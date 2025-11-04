@@ -550,17 +550,8 @@ subcatEl.addEventListener("change", () => render(DATA));
 function attachHandlers(wrap) {
   // cette fonction est normalement responsable de gérer les + / - et les cases à cocher
   // si tu veux juste tester l’affichage du menu sans interactivité :
-  return;
-}
-
-function updateTotal() {
-  // fonction vide temporaire pour éviter l’erreur
-  return;
-}
-
-// ➕ Premier affichage du menu
-render(DATA);
-    function attachHandlers(wrap) {
+  // Gestion des interactions cases à cocher et quantités
+function attachHandlers(wrap) {
   wrap.querySelectorAll(".checkbox").forEach(cb => {
     cb.addEventListener("change", e => {
       const id = e.target.id;
@@ -576,7 +567,6 @@ render(DATA);
         selected.delete(id);
         qtyBox.style.display = "none";
       }
-
       updateTotal();
     });
   });
@@ -592,13 +582,13 @@ render(DATA);
       if (action === "plus") item.qty++;
       if (action === "minus" && item.qty > 1) item.qty--;
       qtyEl.textContent = item.qty;
-
       selected.set(id, item);
       updateTotal();
     });
   });
 }
 
+// Calcul du total global
 function calcTotal() {
   let total = 0;
   for (const item of selected.values()) {
@@ -607,11 +597,23 @@ function calcTotal() {
   return total;
 }
 
+// Mettre à jour l'affichage du total en bas
 function updateTotal() {
   const total = calcTotal();
-  document.getElementById("orderTotal").textContent = `Total : ${total.toFixed(2).replace(".", ",")} €`;
+  document.getElementById("orderTotal").textContent =
+    `Total : ${total.toFixed(2).replace(".", ",")} €`;
 }
 
+  return;
+}
+
+function updateTotal() {
+  // fonction vide temporaire pour éviter l’erreur
+  return;
+}
+
+// ➕ Premier affichage du menu
+render(DATA);
 
 // BARRE BAS FIXE (avec nom + numéro de table obligatoires)
 const bar = document.createElement('div');
