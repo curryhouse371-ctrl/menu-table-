@@ -547,10 +547,8 @@ function render(data){
 // ➕ Réactions aux filtres / recherche
 searchEl.addEventListener("input", () => render(DATA));
 subcatEl.addEventListener("change", () => render(DATA));
-function attachHandlers(wrap) {
-  // cette fonction est normalement responsable de gérer les + / - et les cases à cocher
-  // si tu veux juste tester l’affichage du menu sans interactivité :
-  // Gestion des interactions cases à cocher et quantités
+
+// Gestion des interactions cases à cocher et quantités
 function attachHandlers(wrap) {
   wrap.querySelectorAll(".checkbox").forEach(cb => {
     cb.addEventListener("change", e => {
@@ -604,13 +602,11 @@ function updateTotal() {
     `Total : ${total.toFixed(2).replace(".", ",")} €`;
 }
 
-  return;
-}
+// ➕ Premier affichage du menu
+render(DATA);
 
-function updateTotal() {
-  // fonction vide temporaire pour éviter l’erreur
-  return;
-}
+
+
 
 // ➕ Premier affichage du menu
 render(DATA);
