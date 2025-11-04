@@ -9,8 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     :root { --ch-primary:#f97316; --ch-ink:#1f2937; --ch-bg:#fff7ed; }
-    /* Fond orange clair texturé */
-    body{
+    body {
       background: var(--ch-bg);
       background-image:
         radial-gradient(rgba(0,0,0,.03) 1px, transparent 1px),
@@ -21,7 +20,6 @@
     .title-gradient { color: var(--ch-primary); }
     .card { background:#fff; border-radius:1rem; box-shadow:0 10px 20px rgba(0,0,0,.05); }
     .price { color:var(--ch-primary); font-weight:700; }
-    .tag { background:rgba(249,115,22,.08); color:var(--ch-primary); }
     .sticky-bar {
       position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
       background: #fff; border-top: 1px solid rgba(249,115,22,.25);
@@ -55,14 +53,6 @@
         <a href="tel:0983036692" class="underline font-semibold">09 83 03 66 92</a> ·
         <a href="https://wa.me/33763424110" target="_blank" class="underline font-semibold text-green-700">WhatsApp</a>
       </p>
-    </div>
-
-    <!-- Filtres -->
-    <div class="mt-6 flex flex-col md:flex-row gap-3">
-      <input id="search" type="search" placeholder="Rechercher un plat (ex. tikka, agneau, naan)" class="w-full md:flex-1 px-4 py-3 rounded-xl border border-orange-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-orange-300" />
-      <select id="subcategoryFilter" class="px-4 py-3 rounded-xl border border-orange-200 bg-white/80">
-        <option value="">Toutes les sous-catégories</option>
-      </select>
     </div>
   </header>
 
@@ -449,10 +439,6 @@
   <!-- RENDERER + SÉLECTION / QUANTITÉS / TOTAL / WHATSAPP -->
   <script>
     const menuEl = document.getElementById("menu");
-    const searchEl = document.getElementById("search");
-    const subcatEl = document.getElementById("subcategoryFilter");
-
-    // ÉTAT DE SÉLECTION : key = id unique de l'item (pas le nom), val = { name, price, qty }
     const selected = new Map();
 
     // Remplir filtre sous-catégories (s'il y en a)
@@ -605,12 +591,6 @@ function updateTotal() {
 // ➕ Premier affichage du menu
 render(DATA);
 
-
-
-
-// ➕ Premier affichage du menu
-render(DATA);
-
 // BARRE BAS FIXE (avec nom + numéro de table obligatoires)
 const bar = document.createElement('div');
 bar.className = 'sticky-bar';
@@ -629,71 +609,58 @@ bar.innerHTML = `
       </div>
     </div>
   </div>`;
-// Fonction pour insérer la barre sticky en bas
-function insertStickyBar() {
-  const bar = document.createElement('div');
-  bar.className = 'sticky-bar';
-  bar.innerHTML = `
-    <div class="max-w-6xl mx-auto px-4 py-3 grid gap-3 md:flex md:items-end md:justify-between">
-      <div class="flex flex-col md:flex-row gap-2 md:items-center flex-wrap w-full">
-        <label for="clientName" class="text-sm text-gray-700 whitespace-nowrap">Nom du client :</label>
-        <input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
-
-        <label for="tableNumber" class="text-sm text-gray-700 whitespace-nowrap">N° de table :</label>
-        <input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
-
-        <div class="flex items-center gap-3 mt-2 md:mt-0">
-          <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
-          <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande sur WhatsApp</a>
-        </div>
-      </div>
-    </div>`;
-
-  // Ajoute la barre sticky à la fin du body
-  document.body.appendChild(bar);
-
-  // Gérer l'événement de l'envoi via WhatsApp
-  document.getElementById("sendWhatsApp").addEventListener("click", e => {
-    e.preventDefault();
-
-    const name = (document.getElementById("clientName").value || "").trim();
-    const table = (document.getElementById("tableNumber").value || "").trim();
-
-    // Validation des champs
-    if (selected.size === 0) {
-      alert("Merci de cocher au moins un plat avant d’envoyer la commande.");
-      return;
+    
+ // Adding sticky bar
+    function insertStickyBar() {
+      const bar = document.createElement('div');
+      bar.className = 'sticky-bar';
+      bar.innerHTML = `
+        <div class="max-w-6xl mx-auto px-4 py-3 grid gap-3 md:flex md:items-end md:justify-between">
+          <div class="flex flex-col md:flex-row gap-2 md:items-center flex-wrap w-full">
+            <label for="clientName" class="text-sm text-gray-700 whitespace-nowrap">Nom du client :</label>
+            <input id="clientName" type="text" placeholder="ex. Karim" class="px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
+            <label for="tableNumber" class="text-sm text-gray-700 whitespace-nowrap">N° de table :</label>
+            <input id="tableNumber" type="number" min="1" placeholder="ex. 5" class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300" required />
+            <div class="flex items-center gap-3 mt-2 md:mt-0">
+              <div id="orderTotal" class="text-lg font-semibold text-gray-900">Total : 0,00 €</div>
+              <a id="sendWhatsApp" href="#" class="px-5 py-3 rounded-xl bg-green-600 text-white font-semibold text-center md:min-w-[280px]">💬 Envoyer la commande sur WhatsApp</a>
+            </div>
+          </div>
+        </div>`;
+      document.body.appendChild(bar);
     }
+    
+    // Calling the function to insert sticky bar
+    insertStickyBar();
+    
+    // Event listener for WhatsApp
+    document.getElementById("sendWhatsApp").addEventListener("click", e => {
+      e.preventDefault();
 
-    if (!name) {
-      alert("Merci d’indiquer votre nom avant d’envoyer la commande.");
-      document.getElementById("clientName").focus();
-      return;
-    }
+      const name = document.getElementById("clientName").value.trim();
+      const table = document.getElementById("tableNumber").value.trim();
+      
+      if (selected.size === 0) {
+        alert("Merci de cocher au moins un plat avant d’envoyer la commande.");
+        return;
+      }
 
-    if (!table) {
-      alert("Merci d’indiquer le numéro de table avant d’envoyer la commande.");
-      document.getElementById("tableNumber").focus();
-      return;
-    }
+      if (!name || !table) {
+        alert("Merci d’indiquer le nom et le numéro de table.");
+        return;
+      }
 
-    let msg = `Bonjour Curry House,%0A`;
-    msg += `Commande de ${name} (table n°${table})%0A%0A`;
-    msg += `Plats :%0A`;
+      let msg = `Bonjour Curry House,%0A`;
+      msg += `Commande de ${name} (table n°${table})%0A%0A`;
+      msg += `Plats :%0A`;
 
-    for (const item of selected.values()) {
-      msg += `- ${item.name} x${item.qty} (${(item.price * item.qty).toFixed(2).replace(".", ",")} €)%0A`;
-    }
+      selected.forEach(item => {
+        msg += `- ${item.name} x${item.qty} (${(item.price * item.qty).toFixed(2).replace(".", ",")} €)%0A`;
+      });
 
-    msg += `%0A🔸 Total : ${(calcTotal()).toFixed(2).replace(".", ",")} €`;
-
-    window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
-  });
-}
-
-// Appel de la fonction pour insérer la barre sticky
-insertStickyBar();
-  
-</script>
+      msg += `%0A🔸 Total : ${(calcTotal()).toFixed(2).replace(".", ",")} €`;
+      window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
+    });
+  </script>
 </body>
 </html>
