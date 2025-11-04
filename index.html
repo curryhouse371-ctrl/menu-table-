@@ -627,8 +627,14 @@ document.getElementById("sendWhatsApp").addEventListener("click", e => {
   window.open(`https://wa.me/33763424110?text=${msg}`, "_blank");
 });
 
+// Initialiser l’affichage du menu et les filtres
+searchEl.addEventListener("input", () => render(DATA));
+subcategoryFilter.addEventListener("change", () => render(DATA));
+// ⚠️ Si ton select a l’id "subcategoryFilter", assure-toi d’utiliser bien la même variable :
+subcatEl.addEventListener("change", () => render(DATA));
 
-    // Ne pas oublier d’appeler render une fois la page chargée
+render(DATA);
+
 </script>
 </body>
 </html>
