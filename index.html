@@ -604,34 +604,38 @@
         </div>`;
     }
 
-    function itemRow(item, catIndex, itemIndex){
-      const id = `item_${catIndex}_${itemIndex}`;
-      const displayIndex = globalIndex++;
-      return `
-        <div class="flex items-center justify-between py-2 border-b border-orange-50 gap-3">
-          <div class="flex items-start gap-3">
-            <input
-              id="${id}"
-              type="checkbox"
-              class="checkbox mt-1"
-              data-name="${item.name.replace(/"/g,'&quot;')}"
-              data-price="${item.price}"
-            >
-            <label for="${id}" class="cursor-pointer">
-              <p class="font-medium">${displayIndex}. ${item.name}</p>
-              ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
-            </label>
-          </div>
-          <div class="flex items-center gap-3">
-            <div class="flex items-center gap-1" data-qty-box="${id}" style="display:none;">
-              <div class="qty-btn" data-action="minus" data-id="${id}">-</div>
-              <span id="qty_${id}">1</span>
-              <div class="qty-btn" data-action="plus" data-id="${id}">+</div>
-            </div>
-            <div class="price whitespace-nowrap">${euro(item.price)}</div>
-          </div>
-        </div>`;
-    }
+    function itemRow(item, catIndex, itemIndex) {
+  const id = `item_${catIndex}_${itemIndex}`;
+  
+  // Gestion du saut de numéros
+  if (globalIndex === 7) globalIndex = 9; // on saute 7 et 8
+
+  const displayIndex = globalIndex++;
+  return `
+    <div class="flex items-center justify-between py-2 border-b border-orange-50 gap-3">
+      <div class="flex items-start gap-3">
+        <input
+          id="${id}"
+          type="checkbox"
+          class="checkbox mt-1"
+          data-name="${item.name.replace(/"/g,'&quot;')}"
+          data-price="${item.price}"
+        >
+        <label for="${id}" class="cursor-pointer">
+          <p class="font-medium">${displayIndex}. ${item.name}</p>
+          ${item.desc ? `<p class="text-sm text-gray-600">${item.desc}</p>` : ""}
+        </label>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1" data-qty-box="${id}" style="display:none;">
+          <div class="qty-btn" data-action="minus" data-id="${id}">-</div>
+          <span id="qty_${id}">1</span>
+          <div class="qty-btn" data-action="plus" data-id="${id}">+</div>
+        </div>
+        <div class="price whitespace-nowrap">${euro(item.price)}</div>
+      </div>
+    </div>`;
+}
 
     function attachHandlers(scopeEl){
       // Cases à cocher
