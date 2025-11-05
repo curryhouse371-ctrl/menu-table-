@@ -102,9 +102,6 @@
           class="w-20 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300"
           required
         />
-<label class="text-sm text-gray-700 whitespace-nowrap">N° du plat :</label>
-<input id="dishNumber" type="number" min="1" placeholder="ex. 12" class="w-24 px-3 py-2 rounded-lg border border-orange-200 focus:outline-none focus:ring-2 focus:ring-orange-300">
-<button id="addDishByNumber" class="px-4 py-2 rounded-lg bg-orange-500 text-white font-semibold">Ajouter</button>
 
         <div class="flex items-center gap-3 mt-2 md:mt-0">
           <div id="orderTotal" class="text-lg font-semibold text-gray-900">
@@ -755,40 +752,7 @@
       const url = `https://wa.me/33763424110?text=${encodeURIComponent(msg)}`;
       window.open(url, "_blank");
     });
-    // === AJOUT : Sélection d’un plat par numéro ===
-document.getElementById("addDishByNumber").addEventListener("click", () => {
-  const num = parseInt(document.getElementById("dishNumber").value);
-  if (!num || num < 1) {
-    alert("Veuillez entrer un numéro de plat valide.");
-    return;
-  }
-
-  // Trouver le plat correspondant dans le DOM
-  const allLabels = document.querySelectorAll("#menu label p.font-medium");
-  let found = null;
-  allLabels.forEach(lbl => {
-    if (lbl.textContent.startsWith(num + ".")) {
-      found = lbl.closest("div").querySelector("input[type='checkbox']");
-    }
-  });
-
-  if (!found) {
-    alert(`Aucun plat trouvé avec le numéro ${num}.`);
-    return;
-  }
-
-  // Coche automatiquement le plat et déclenche l’événement
-  if (!found.checked) {
-    found.checked = true;
-    found.dispatchEvent(new Event("change"));
-  } else {
-    alert("Ce plat est déjà ajouté à la commande.");
-  }
-
-  // Réinitialiser le champ
-  document.getElementById("dishNumber").value = "";
-});
-
+   
   </script>
 </body>
 </html>
