@@ -605,13 +605,14 @@
         </div>`;
     }
 
-  function itemRow(item, catIndex, itemIndex) {
+ function itemRow(item, catIndex, itemIndex) {
   const id = `item_${catIndex}_${itemIndex}`;
 
   // Gestion des sauts manuels
-  if (globalIndex === 7) globalIndex = 9;   // saute 7 et 8
-  if (globalIndex === 45) globalIndex = 46; // saute 45
-  if (globalIndex === 62) globalIndex = 63; // saute 62
+  if (globalIndex === 7) globalIndex = 9;     // saute 7 et 8
+  if (globalIndex === 45) globalIndex = 46;   // saute 45
+  if (globalIndex === 62) globalIndex = 63;   // saute 62
+  if (globalIndex === 237) globalIndex = 241; // saute 237 à 240
 
   const displayIndex = globalIndex++;
   return `
@@ -639,6 +640,7 @@
       </div>
     </div>`;
 }
+
 
 
     function attachHandlers(scopeEl){
