@@ -766,10 +766,13 @@
       msg += `Commande de ${name} (table n°${table})\n\n`;
       msg += `Plats :\n`;
 
-      for (const item of selected.values()){
-        const lineTotal = item.price * item.qty;
-        msg += `- ${item.name} x${item.qty} (${lineTotal.toFixed(2).replace(".", ",")} €)\n`;
-      }
+      for (const [id, item] of selected.entries()) {
+  const lbl = document.querySelector(`label[for='${id}'] p.font-medium`);
+  const num = lbl ? lbl.textContent.split(".")[0] : "?"; // récupère le numéro du plat
+  const lineTotal = item.price * item.qty;
+  msg += `- [${num}] ${item.name} x${item.qty} (${lineTotal.toFixed(2).replace(".", ",")} €)\n`;
+}
+
 
       msg += `\n🔸 Total : ${calcTotal().toFixed(2).replace(".", ",")} €`;
 
